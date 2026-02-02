@@ -1,21 +1,22 @@
 version: '3.8'
 
 services:
-backend:
-  build: ./backend
-  volumes:
-    - ./backend:/usr/src/app
-  expose:
-    - 8000
-  depends_on:
-    db:
-      condition: service_healthy
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/usr/src/app
+    expose:
+      - 8000
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:15
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "grandchat" ]
+      test: ["CMD", "pg_isready", "-U", "grandchat"]
       interval: 1s
       timeout: 5s
       retries: 10
