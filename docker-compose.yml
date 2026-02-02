@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  nginx:
+   image: nginx:1.25
+   volumes:
+    - ./nginx:/etc/nginx/
+   ports:
+    - 9000:80
+   depends_on:
+    - backend
   backend:
     build: ./backend
     volumes:
