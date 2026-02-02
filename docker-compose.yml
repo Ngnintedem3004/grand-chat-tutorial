@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+backend:
+  build: ./backend
+  volumes:
+    - ./backend:/usr/src/app
+  expose:
+    - 8000
+  depends_on:
+    db:
+      condition: service_healthy
   db:
     image: postgres:15
     volumes:
