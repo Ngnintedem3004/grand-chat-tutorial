@@ -38,7 +38,24 @@ class Message(models.Model):
     # Note, message may have null user – we consider such messages "system". These messages
     # initiated by the backend and have no user author. We are not using such messages in
     # the example currently, but leave the opportunity to extend.
-    user = models.ForeignKey(
-        User, related_name='messages', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE, null=True)
     content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Outbox(models.Model):
+    method = models.TextField(default="publish")
+    payload = models.JSONField()
+    partition = models.BigIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+# While the CDC model here is the same as Outbox it has different partition field semantics,
+# also in outbox case we remove processed messages from DB, while in CDC don't. So to not
+# mess up with different semantics when switching between broadcast modes of the example app
+# we created two separated models here. 
+class CDC(models.Model):
+    method = models.TextField(default="publish")
+    payload = models.JSONField()
+    partition = models.BigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

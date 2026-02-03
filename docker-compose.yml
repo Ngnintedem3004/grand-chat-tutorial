@@ -32,6 +32,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  centrifugo:
+    image: centrifugo/centrifugo:v6
+    restart: unless-stopped
+    volumes:
+      - ./centrifugo:/centrifugo
+    command: centrifugo -c config.json
+    ports:
+      - "8006:8007"
 
   db:
     image: postgres:15
